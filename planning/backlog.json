@@ -1,0 +1,351 @@
+{
+  "project_slug": "road-condition-mapping",
+  "project_name": "Road Condition Mapping",
+  "track": "high",
+  "first_public_result_month": 7,
+  "total_hours": 800,
+  "reserve_hours": 160,
+  "milestones": [
+    {
+      "id": "M1",
+      "title": "Month 1 — scope and reproducibility",
+      "description": "40h work + 10h reserve; freeze rights, contracts, holdouts, and environment."
+    },
+    {
+      "id": "M2",
+      "title": "Month 4 — baseline evidence",
+      "description": "160h work + 40h reserve; runnable data and baseline pipeline with leakage controls."
+    },
+    {
+      "id": "M3",
+      "title": "Month 7 — first functional public release",
+      "description": "160h work + 40h reserve; cumulative 360h work + 90h reserve; usable replay, evaluation, exports and install instructions."
+    },
+    {
+      "id": "M4",
+      "title": "Month 10 — robustness and deployment",
+      "description": "160h work + 40h reserve; hardening, integration, workflow validation and operational packaging."
+    },
+    {
+      "id": "M5",
+      "title": "By month 12 — maintained handoff",
+      "description": "120h work + 30h reserve; security, release, maintenance rehearsal and final scope decision; 800h total."
+    }
+  ],
+  "issues": [
+    {
+      "id": "RC-001",
+      "title": "Freeze triage scope and evidence tiers",
+      "body": "Output: docs/scope.md and docs/evidence-tiers.md. Steps: define four damage classes, located versus unlocated workflows and simulated-map boundaries. Acceptance: technical finish excludes field capture and every claim has an evidence category. Test: walk image-only, synthetic-route and unavailable-real-data scenarios. Dependencies: none; use the approved proposal and implementation protocol. Record commands, pinned inputs, observed results and remaining limitations in the output evidence. Keep all data provenance attached and do not introduce manual annotation. Stop at the stated deliverable; any scope or interface change requires the protocol's design review.",
+      "estimate_hours": 8,
+      "milestone": "M1",
+      "depends_on": [],
+      "labels": [
+        "type:task",
+        "project:road-condition-mapping"
+      ],
+      "phase": "definition"
+    },
+    {
+      "id": "RC-002",
+      "title": "Resolve data rights and fallback",
+      "body": "Output: data/licenses/manifest.json and docs/rights-decision.md. Steps: record conflicting RDD notices, weight licenses and optional mapping terms; select owned rendering fallback. Acceptance: unresolved rights block data adoption while the synthetic path remains executable. Test: specify rejection of unknown-license assets and missing attribution. Dependencies: RC-001. Record commands, pinned inputs, observed results and remaining limitations in the output evidence. Keep all data provenance attached and do not introduce manual annotation. Stop at the stated deliverable; any scope or interface change requires the protocol's design review.",
+      "estimate_hours": 8,
+      "milestone": "M1",
+      "depends_on": [
+        "RC-001"
+      ],
+      "labels": [
+        "type:task",
+        "project:road-condition-mapping"
+      ],
+      "phase": "definition"
+    },
+    {
+      "id": "RC-003",
+      "title": "Freeze observation contracts and splits",
+      "body": "Output: schemas/observation.json, schemas/detection.json and evaluation/splits.json. Steps: define coordinate provenance, nullable locations, grouped holdouts and export semantics. Acceptance: camera positions cannot masquerade as defect positions and split groups are immutable. Test: test axis order, absent GPS and duplicate-cluster separation. Dependencies: RC-001, RC-002. Record commands, pinned inputs, observed results and remaining limitations in the output evidence. Keep all data provenance attached and do not introduce manual annotation. Stop at the stated deliverable; any scope or interface change requires the protocol's design review.",
+      "estimate_hours": 12,
+      "milestone": "M1",
+      "depends_on": [
+        "RC-001",
+        "RC-002"
+      ],
+      "labels": [
+        "type:task",
+        "project:road-condition-mapping"
+      ],
+      "phase": "definition"
+    },
+    {
+      "id": "RC-004",
+      "title": "Define CPU environment and fixture limits",
+      "body": "Output: docs/environment.md and tests/contracts/test_bootstrap.py. Steps: pin detector and geospatial packages; document memory, training and disk caps. Acceptance: bootstrap uses no paid service and includes an offline synthetic route fixture. Test: specify dependency imports, coordinate conversion and local viewer smoke checks. Dependencies: RC-003. Record commands, pinned inputs, observed results and remaining limitations in the output evidence. Keep all data provenance attached and do not introduce manual annotation. Stop at the stated deliverable; any scope or interface change requires the protocol's design review.",
+      "estimate_hours": 12,
+      "milestone": "M1",
+      "depends_on": [
+        "RC-003"
+      ],
+      "labels": [
+        "type:task",
+        "project:road-condition-mapping"
+      ],
+      "phase": "definition"
+    },
+    {
+      "id": "RC-005",
+      "title": "Generate roads with automatic labels",
+      "body": "Output: src/generation/ and fixtures/synthetic-roads/. Before implementation, split this epic into four 10h children, redistributing its 40h estimate: road geometry; four defect primitives; camera trajectories; label and provenance exports. Acceptance: boxes and synthetic coordinates derive from renderer truth with explicit source flags. Test: test visible-box boundaries and deterministic seeds across held-out scene families. Dependencies: RC-002, RC-003, RC-004. Complete children in the listed order; each must include its relevant test and evidence in the output directory. Record versions, commands, inputs and limitations. Do not count child estimates again or spend reserve without a milestone decision.",
+      "estimate_hours": 40,
+      "milestone": "M2",
+      "depends_on": [
+        "RC-002",
+        "RC-003",
+        "RC-004"
+      ],
+      "labels": [
+        "type:epic",
+        "project:road-condition-mapping"
+      ],
+      "phase": "baseline"
+    },
+    {
+      "id": "RC-006",
+      "title": "Implement guarded source ingestion",
+      "body": "Output: src/ingest/ and reports/ingestion/. Before implementation, split this epic into four 10h children, redistributing its 40h estimate: rights enforcement; image parser; duplicate grouping; optional cleared-RDD adapter. Acceptance: records preserve source metadata and absent coordinates stay null throughout ingestion. Test: test corrupted images, unresolved rights and near-duplicate leakage across splits. Dependencies: RC-002, RC-003, RC-005. Complete children in the listed order; each must include its relevant test and evidence in the output directory. Record versions, commands, inputs and limitations. Do not count child estimates again or spend reserve without a milestone decision.",
+      "estimate_hours": 40,
+      "milestone": "M2",
+      "depends_on": [
+        "RC-002",
+        "RC-003",
+        "RC-005"
+      ],
+      "labels": [
+        "type:epic",
+        "project:road-condition-mapping"
+      ],
+      "phase": "baseline"
+    },
+    {
+      "id": "RC-007",
+      "title": "Train four-class detection baseline",
+      "body": "Output: src/detection/ and reports/baseline/. Before implementation, split this epic into four 10h children, redistributing its 40h estimate: edge comparator; detector training; development thresholds; model and weight manifest. Acceptance: training stays inside compute cap and reports per-class development metrics. Test: compare against the texture baseline and confirm test images never reach training. Dependencies: RC-005, RC-006. Complete children in the listed order; each must include its relevant test and evidence in the output directory. Record versions, commands, inputs and limitations. Do not count child estimates again or spend reserve without a milestone decision.",
+      "estimate_hours": 40,
+      "milestone": "M2",
+      "depends_on": [
+        "RC-005",
+        "RC-006"
+      ],
+      "labels": [
+        "type:epic",
+        "project:road-condition-mapping"
+      ],
+      "phase": "baseline"
+    },
+    {
+      "id": "RC-008",
+      "title": "Build detector evaluation harness",
+      "body": "Output: evaluation/detection.py and reports/detection/. Before implementation, split this epic into four 10h children, redistributing its 40h estimate: AP implementation; false-positive budget; group bootstrap; immutable test report. Acceptance: synthetic and real metrics remain separate and each stratum reports sample counts. Test: test perfect boxes, wrong classes, duplicate predictions and grouped confidence intervals. Dependencies: RC-003, RC-007. Complete children in the listed order; each must include its relevant test and evidence in the output directory. Record versions, commands, inputs and limitations. Do not count child estimates again or spend reserve without a milestone decision.",
+      "estimate_hours": 40,
+      "milestone": "M2",
+      "depends_on": [
+        "RC-003",
+        "RC-007"
+      ],
+      "labels": [
+        "type:epic",
+        "project:road-condition-mapping"
+      ],
+      "phase": "baseline"
+    },
+    {
+      "id": "RC-009",
+      "title": "Add quality and abstention states",
+      "body": "Output: src/quality/ and reports/quality/. Before implementation, split this epic into four 10h children, redistributing its 40h estimate: blur screening; exposure checks; threshold calibration; review-state integration. Acceptance: low-quality images retain evidence and explicit abstention rather than silent deletion. Test: sweep blur, glare and empty frames without optimizing on test outcomes. Dependencies: RC-007, RC-008. Complete children in the listed order; each must include its relevant test and evidence in the output directory. Record versions, commands, inputs and limitations. Do not count child estimates again or spend reserve without a milestone decision.",
+      "estimate_hours": 40,
+      "milestone": "M3",
+      "depends_on": [
+        "RC-007",
+        "RC-008"
+      ],
+      "labels": [
+        "type:epic",
+        "project:road-condition-mapping"
+      ],
+      "phase": "public-release"
+    },
+    {
+      "id": "RC-010",
+      "title": "Implement location-safe aggregation",
+      "body": "Output: src/mapping/ and reports/location-tests/. Before implementation, split this epic into four 10h children, redistributing its 40h estimate: coordinate gate; metric projection; uncertainty-aware clustering; recurrence states. Acceptance: no unlocated input becomes a map feature and uncertain recurrence stays unknown. Test: test opposite directions, GPS noise, absent timestamps and synthetic cluster truth. Dependencies: RC-003, RC-006, RC-009. Complete children in the listed order; each must include its relevant test and evidence in the output directory. Record versions, commands, inputs and limitations. Do not count child estimates again or spend reserve without a milestone decision.",
+      "estimate_hours": 40,
+      "milestone": "M3",
+      "depends_on": [
+        "RC-003",
+        "RC-006",
+        "RC-009"
+      ],
+      "labels": [
+        "type:epic",
+        "project:road-condition-mapping"
+      ],
+      "phase": "public-release"
+    },
+    {
+      "id": "RC-011",
+      "title": "Build review UI and traceable exports",
+      "body": "Output: src/api/, web/ and src/export/. Before implementation, split this epic into four 10h children, redistributing its 40h estimate: job API; image review queue; simulated map; CSV and GeoJSON exports. Acceptance: users distinguish simulation from real evidence and recover every export's source record. Test: test null coordinates, source banners, attribution and export re-import invariants. Dependencies: RC-009, RC-010. Complete children in the listed order; each must include its relevant test and evidence in the output directory. Record versions, commands, inputs and limitations. Do not count child estimates again or spend reserve without a milestone decision.",
+      "estimate_hours": 40,
+      "milestone": "M3",
+      "depends_on": [
+        "RC-009",
+        "RC-010"
+      ],
+      "labels": [
+        "type:epic",
+        "project:road-condition-mapping"
+      ],
+      "phase": "public-release"
+    },
+    {
+      "id": "RC-012",
+      "title": "Deliver first functional public package",
+      "body": "Output: release/v0.1/ and reports/m3/. Before implementation, split this epic into four 10h children, redistributing its 40h estimate: clean install; fixed evaluation; example routes; release and limitations notes. Acceptance: month-seven release runs detection through review and exports without credentials. Test: execute offline quickstart and verify image-only fixtures never appear on the map. Dependencies: RC-008, RC-011. Complete children in the listed order; each must include its relevant test and evidence in the output directory. Record versions, commands, inputs and limitations. Do not count child estimates again or spend reserve without a milestone decision.",
+      "estimate_hours": 40,
+      "milestone": "M3",
+      "depends_on": [
+        "RC-008",
+        "RC-011"
+      ],
+      "labels": [
+        "type:epic",
+        "project:road-condition-mapping"
+      ],
+      "phase": "public-release"
+    },
+    {
+      "id": "RC-013",
+      "title": "Improve shift robustness within budget",
+      "body": "Output: src/detection/robustness/ and reports/ablation/. Before implementation, split this epic into four 10h children, redistributing its 40h estimate: failure stratification; one augmentation study; lightweight model comparison; accept-or-revert decision. Acceptance: retained changes improve development performance and preserve class-specific recall evidence. Test: evaluate sealed country or generator holdout once with frozen settings. Dependencies: RC-012. Complete children in the listed order; each must include its relevant test and evidence in the output directory. Record versions, commands, inputs and limitations. Do not count child estimates again or spend reserve without a milestone decision.",
+      "estimate_hours": 40,
+      "milestone": "M4",
+      "depends_on": [
+        "RC-012"
+      ],
+      "labels": [
+        "type:epic",
+        "project:road-condition-mapping"
+      ],
+      "phase": "hardening"
+    },
+    {
+      "id": "RC-014",
+      "title": "Harden temporal recurrence and exports",
+      "body": "Output: src/mapping/recurrence.py and reports/recurrence/. Before implementation, split this epic into four 10h children, redistributing its 40h estimate: capture comparability; time-window rules; ambiguous-match states; longitudinal evidence export. Acceptance: new and persistent states require documented comparable evidence instead of proximity alone. Test: test missing dates, route drift, contradictory observations and known synthetic recurrence. Dependencies: RC-010, RC-012. Complete children in the listed order; each must include its relevant test and evidence in the output directory. Record versions, commands, inputs and limitations. Do not count child estimates again or spend reserve without a milestone decision.",
+      "estimate_hours": 40,
+      "milestone": "M4",
+      "depends_on": [
+        "RC-010",
+        "RC-012"
+      ],
+      "labels": [
+        "type:epic",
+        "project:road-condition-mapping"
+      ],
+      "phase": "hardening"
+    },
+    {
+      "id": "RC-015",
+      "title": "Add bounded external-source interface",
+      "body": "Output: src/adapters/ and docs/source-adapters.md. Before implementation, split this epic into four 10h children, redistributing its 40h estimate: adapter protocol; provenance validator; mock geolocated feed; optional provider integration. Acceptance: core workflow operates offline and unsupported provider terms block that adapter only. Test: replay credential-free mocks with quota errors, missing GPS and changing attribution. Dependencies: RC-006, RC-012. Complete children in the listed order; each must include its relevant test and evidence in the output directory. Record versions, commands, inputs and limitations. Do not count child estimates again or spend reserve without a milestone decision.",
+      "estimate_hours": 40,
+      "milestone": "M4",
+      "depends_on": [
+        "RC-006",
+        "RC-012"
+      ],
+      "labels": [
+        "type:epic",
+        "project:road-condition-mapping"
+      ],
+      "phase": "hardening"
+    },
+    {
+      "id": "RC-016",
+      "title": "Package deployment and validate jobs",
+      "body": "Output: deploy/ and reports/workflow/. Before implementation, split this epic into four 10h children, redistributing its 40h estimate: container and storage; CPU measurements; three task scripts; workflow evidence summary. Acceptance: fresh install completes review jobs and records interpretation errors and runtime costs. Test: test queue saturation, offline maps and optional feedback without collecting labels. Dependencies: RC-013, RC-014, RC-015. Complete children in the listed order; each must include its relevant test and evidence in the output directory. Record versions, commands, inputs and limitations. Do not count child estimates again or spend reserve without a milestone decision.",
+      "estimate_hours": 40,
+      "milestone": "M4",
+      "depends_on": [
+        "RC-013",
+        "RC-014",
+        "RC-015"
+      ],
+      "labels": [
+        "type:epic",
+        "project:road-condition-mapping"
+      ],
+      "phase": "hardening"
+    },
+    {
+      "id": "RC-017",
+      "title": "Harden privacy and upload boundaries",
+      "body": "Output: tests/security/ and docs/privacy.md. Before implementation, split this epic into four 8h children, redistributing its 32h estimate: archive restrictions; retention controls; log minimization; dependency and rights inventory. Acceptance: public samples contain no real identifying imagery and release rights remain traceable. Test: test traversal, oversized uploads, deletion consistency and location leakage in logs. Dependencies: RC-016. Complete children in the listed order; each must include its relevant test and evidence in the output directory. Record versions, commands, inputs and limitations. Do not count child estimates again or spend reserve without a milestone decision.",
+      "estimate_hours": 32,
+      "milestone": "M5",
+      "depends_on": [
+        "RC-016"
+      ],
+      "labels": [
+        "type:epic",
+        "project:road-condition-mapping"
+      ],
+      "phase": "handoff"
+    },
+    {
+      "id": "RC-018",
+      "title": "Prepare stable release and restore path",
+      "body": "Output: release/v1.0/ and docs/operations.md. Before implementation, split this epic into four 8h children, redistributing its 32h estimate: version packaging; database migration; backup restore; rollback procedure. Acceptance: restored reports preserve observation identifiers, attribution and location-status distinctions. Test: interrupt a migration and verify checksums after restoring the prior release. Dependencies: RC-017. Complete children in the listed order; each must include its relevant test and evidence in the output directory. Record versions, commands, inputs and limitations. Do not count child estimates again or spend reserve without a milestone decision.",
+      "estimate_hours": 32,
+      "milestone": "M5",
+      "depends_on": [
+        "RC-017"
+      ],
+      "labels": [
+        "type:epic",
+        "project:road-condition-mapping"
+      ],
+      "phase": "handoff"
+    },
+    {
+      "id": "RC-019",
+      "title": "Rehearse maintenance and drift review",
+      "body": "Output: reports/maintenance/ and docs/maintenance.md. Before implementation, split this epic into four 7h children, redistributing its 28h estimate: weekly checks; dependency-update trial; drift triage; fixture rebuild. Acceptance: four rehearsals record actual effort and regressions without silently retraining models. Test: rerun fixed detection and geolocation fixtures after a compatible dependency update. Dependencies: RC-018. Complete children in the listed order; each must include its relevant test and evidence in the output directory. Record versions, commands, inputs and limitations. Do not count child estimates again or spend reserve without a milestone decision.",
+      "estimate_hours": 28,
+      "milestone": "M5",
+      "depends_on": [
+        "RC-018"
+      ],
+      "labels": [
+        "type:epic",
+        "project:road-condition-mapping"
+      ],
+      "phase": "handoff"
+    },
+    {
+      "id": "RC-020",
+      "title": "Close technical and commercial evidence",
+      "body": "Output: reports/final/ and docs/next-decision.md. Before implementation, split this epic into four 7h children, redistributing its 28h estimate: budget reconciliation; acceptance audit; claims review; continuation decision. Acceptance: technical finish is reproducible and customer demand remains conditional unless observed. Test: audit location provenance and rerun the tagged release's complete public workflow. Dependencies: RC-019. Complete children in the listed order; each must include its relevant test and evidence in the output directory. Record versions, commands, inputs and limitations. Do not count child estimates again or spend reserve without a milestone decision.",
+      "estimate_hours": 28,
+      "milestone": "M5",
+      "depends_on": [
+        "RC-019"
+      ],
+      "labels": [
+        "type:epic",
+        "project:road-condition-mapping"
+      ],
+      "phase": "handoff"
+    }
+  ]
+}
